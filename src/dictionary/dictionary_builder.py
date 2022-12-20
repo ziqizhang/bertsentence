@@ -86,7 +86,7 @@ def extract_frequency_dictionary(df:pandas.DataFrame, data_col:int, outfolder:st
         log.info("Building dictionary by frequency, total rows={}, batch size={}".format(len(df), batch_size))
 
         for index, row in df.iterrows():
-            text = row[data_col]
+            text = str(row[data_col])
             if '(' in text:
                 text = text.split("(")[1][0:-1].strip()
             if '（' in text:
