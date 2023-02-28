@@ -1,0 +1,5 @@
+the hanlp library requires some specific versions of other packages, see screenshot
+
+- hanlp needs keras 2.6, tf 2.6, torch 1.12
+- sentence transformer 2.2.2 requires torch 1.13, not sure if the conflicts will cause problems
+- (we downgraded torch to 1.12, and also torch vision to 0.13.0, not tested sent transformers afterwards).

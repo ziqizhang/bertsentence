@@ -86,13 +86,7 @@ def extract_frequency_dictionary(df:pandas.DataFrame, data_col:int, outfolder:st
         log.info("Building dictionary by frequency, total rows={}, batch size={}".format(len(df), batch_size))
 
         for index, row in df.iterrows():
-            text = str(row[data_col])
-            if '(' in text:
-                text = text.split("(")[1][0:-1].strip()
-            if '（' in text:
-                text = text.split("（")[1][0:-1].strip()
-            text = re.sub(r'[^\w\s]', ' ', text)
-            text = text.replace("\s+"," ").strip()
+            text = clean_text(row[data_col])
             batch.add(text)
             if (index%batch_size==0 and index!=0):
                 res = tok(list(batch))
@@ -155,11 +149,24 @@ def update_freq_dictionary(dictionary:dict, tokens, stopwords):
 def load_stopwords(folder):
     stop=set()
     for f in os.listdir(folder):
-        with open(folder+"/{}".format(f)) as file:
-            lines = file.read().splitlines()
-            stop.update(lines)
+        f = folder+"/{}".format(f)
+        stop.update(load_wordlist(f))
     return list(stop)
 
+def load_wordlist(f):
+    with open(f) as file:
+        lines = file.read().splitlines()
+        return lines
+
+def clean_text(string):
+    string = str(string)
+    if '(' in string:
+        string = string.split("(")[1][0:-1].strip()
+    if '（' in string:
+        string = string.split("（")[1][0:-1].strip()
+    string = re.sub(r'[^\w\s]', ' ', string)
+    string = string.replace("\s+", " ").strip()
+    return string
 
 if __name__ == "__main__":
     # tok = hanlp.load(hanlp.pretrained.tok.COARSE_ELECTRA_SMALL_ZH)
